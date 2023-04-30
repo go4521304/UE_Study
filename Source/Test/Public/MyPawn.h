@@ -28,11 +28,14 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	class UMyPawnMovementComponent* MyMovementComp;
 
-	UPROPERTY()
-	class USpringArmComponent* MySpringArmComp;
+	//UPROPERTY()
+	//class USpringArmComponent* MySpringArmComp;
 
-	UPROPERTY()
-	class UCameraComponent* MyCam;
+	//UPROPERTY()
+	//class UCameraComponent* MyCam;
+
+	UPROPERTY(EditAnywhere)
+	class UCameraActorComponent* MyCameraComponent;
 
 
 	void MoveForward(float AxisValue);

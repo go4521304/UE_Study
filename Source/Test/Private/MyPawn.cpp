@@ -9,6 +9,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "MyPawnMovementComponent.h"
 #include "Components/InputComponent.h"
+#include "CameraActorComponent.h"
 
 
 // Sets default values
@@ -20,13 +21,18 @@ AMyPawn::AMyPawn()
 	MyCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
 	MyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MyMesh"));
 	MyMovementComp = CreateDefaultSubobject<UMyPawnMovementComponent>(TEXT("MovementmentComponent"));
-	MySpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
-	MyCam = CreateDefaultSubobject<UCameraComponent>(TEXT("Cam"));
+	//MySpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	//MyCam = CreateDefaultSubobject<UCameraComponent>(TEXT("Cam"));
 
 	SetRootComponent(MyCapsule);
 	MyMesh->SetupAttachment(GetRootComponent());
-	MySpringArmComp->SetupAttachment(GetRootComponent());
-	MyCam->SetupAttachment(MySpringArmComp);
+	//MySpringArmComp->SetupAttachment(GetRootComponent());
+	//MyCam->SetupAttachment(MySpringArmComp);
+
+	MyCameraComponent = CreateDefaultSubobject<UCameraActorComponent>(TEXT("Cam"));
+	MyCameraComponent->SetupAttachment(GetRootComponent());
+	//MyCameraComponent->SpringArm->SetupAttachment(GetRootComponent());
+	//MyCameraComponent->Camera->SetupAttachment(MyCameraComponent->SpringArm);
 
 	SetActorLocation(FVector(0.f, 0.f, -30.f));
 
