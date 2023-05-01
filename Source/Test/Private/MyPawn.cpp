@@ -10,6 +10,7 @@
 #include "MyPawnMovementComponent.h"
 #include "Components/InputComponent.h"
 #include "CameraActorComponent.h"
+#include "Components/WidgetComponent.h"
 
 
 // Sets default values
@@ -46,6 +47,11 @@ AMyPawn::AMyPawn()
 	}
 	MyMesh->SetRelativeLocation(FVector(0.0f, 0.0f, -30.f));
 	MyMesh->SetRelativeScale3D(FVector(0.5f, 0.5f, 0.5f));
+
+	MyName = CreateDefaultSubobject<UWidgetComponent>(TEXT("Name"));
+	MyName->SetDrawAtDesiredSize(true);
+	MyName->SetWidgetSpace(EWidgetSpace::Screen);
+	MyName->SetupAttachment(GetRootComponent());
 
 	MyMovementComp->UpdatedComponent = RootComponent;
 }

@@ -34,8 +34,14 @@ protected:
 	//UPROPERTY()
 	//class UCameraComponent* MyCam;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	class UCameraActorComponent* MyCameraComponent;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UUserWidget> MyWidgetClass;
+
+	UPROPERTY(EditAnywhere)
+	class UWidgetComponent* MyName;
 
 
 	void MoveForward(float AxisValue);
