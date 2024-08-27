@@ -1,4 +1,4 @@
-// VRM4U Copyright (c) 2021-2022 Haruyoshi Yamamoto. This software is released under the MIT License.
+// VRM4U Copyright (c) 2021-2024 Haruyoshi Yamamoto. This software is released under the MIT License.
 
 #include "VrmEditorEventComponent.h"
 #include "Misc/EngineVersionComparison.h"
@@ -17,9 +17,12 @@
 #elif UE_VERSION_OLDER_THAN(5,0,0)
 #include "ILevelSequenceEditorToolkit.h"
 #include "LevelSequenceEditor/Public/LevelSequenceEditorBlueprintLibrary.h"
-#else
+#elif UE_VERSION_OLDER_THAN(5,3,0)
 #include "ILevelSequenceEditorToolkit.h"
 #include "LevelSequenceEditor/Public/LevelSequenceEditorBlueprintLibrary.h"
+#else
+#include "ILevelSequenceEditorToolkit.h"
+#include "LevelSequenceEditorBlueprintLibrary.h"
 #endif
 
 

@@ -1,4 +1,4 @@
-// VRM4U Copyright (c) 2021-2022 Haruyoshi Yamamoto. This software is released under the MIT License.
+// VRM4U Copyright (c) 2021-2024 Haruyoshi Yamamoto. This software is released under the MIT License.
 
 #include "VrmImportUI.h"
 #include "CoreMinimal.h"
@@ -15,6 +15,8 @@ const FImportOptionData* UVrmImportUI::GenerateOptionData() {
 
 	d.init();
 
+	c(bUEFN);
+
 	c(bAPoseRetarget);
 
 	c(bMobileBone);
@@ -25,11 +27,15 @@ const FImportOptionData* UVrmImportUI::GenerateOptionData() {
 
 	c(ModelScale);
 
-	c(FrameRate);
+	c(AnimationTranslateScale);
+
+	c(PlayRateScale);
 
 	c(bVrm10RemoveLocalRotation);
 
 	c(bVrm10Bindpose);
+
+	c(bForceOriginalBoneName);
 
 	c(bGenerateHumanoidRenamedMesh);
 
@@ -43,7 +49,7 @@ const FImportOptionData* UVrmImportUI::GenerateOptionData() {
 
 	c(bEnableMorphTargetNormal);
 
-	c(bStrictMorphTargetNameMode);
+	c(bForceOriginalMorphTargetName);
 
 	c(bRemoveBlendShapeGroupPrefix);
 
@@ -59,6 +65,8 @@ const FImportOptionData* UVrmImportUI::GenerateOptionData() {
 
 	c(bMipmapGenerateMode);
 
+	c(bUseUE5Material);
+
 	c(bGenerateOutlineMaterial);
 
 	c(bMergeMaterial);
@@ -73,9 +81,15 @@ const FImportOptionData* UVrmImportUI::GenerateOptionData() {
 
 	c(bSimpleRoot);
 
+	c(bActiveBone);
+
 	c(bSkipNoMeshBone);
 
 	c(bDebugOneBone);
+
+	c(bDebugNoMesh);
+
+	c(bDebugNoMaterial);
 
 	c(Skeleton);
 

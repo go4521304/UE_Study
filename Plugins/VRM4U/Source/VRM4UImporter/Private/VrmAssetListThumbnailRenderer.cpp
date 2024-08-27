@@ -1,4 +1,4 @@
-// VRM4U Copyright (c) 2021-2022 Haruyoshi Yamamoto. This software is released under the MIT License.
+// VRM4U Copyright (c) 2021-2024 Haruyoshi Yamamoto. This software is released under the MIT License.
 
 #include "VrmAssetListThumbnailRenderer.h"
 #include "Engine/EngineTypes.h"
@@ -10,11 +10,13 @@
 #include "Widgets/Layout/SBox.h"
 #include "Widgets/Layout/SBorder.h"
 #include "Brushes/SlateColorBrush.h"
+#include "EditorFramework/AssetImportData.h"
 
 #include "ThumbnailRendering/SkeletalMeshThumbnailRenderer.h"
 
 #include "VrmAssetListObject.h"
 #include "VrmLicenseObject.h"
+#include "Vrm1LicenseObject.h"
 #include "VrmMetaObject.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -26,12 +28,21 @@ UClass* FAssetTypeActions_VrmAssetList::GetSupportedClass() const {
 FText FAssetTypeActions_VrmAssetList::GetName() const {
 	return NSLOCTEXT("AssetTypeActions", "FAssetTypeActions_VrmAssetList", "Vrm Asset List");
 }
+
 UClass* FAssetTypeActions_VrmLicense::GetSupportedClass() const {
 	return UVrmLicenseObject::StaticClass();
 }
 FText FAssetTypeActions_VrmLicense::GetName() const {
 	return NSLOCTEXT("AssetTypeActions", "FAssetTypeActions_VrmLicense", "Vrm License");
 }
+
+UClass* FAssetTypeActions_Vrm1License::GetSupportedClass() const {
+	return UVrm1LicenseObject::StaticClass();
+}
+FText FAssetTypeActions_Vrm1License::GetName() const {
+	return NSLOCTEXT("AssetTypeActions", "FAssetTypeActions_Vrm1License", "Vrm1 License");
+}
+
 UClass* FAssetTypeActions_VrmMeta::GetSupportedClass() const {
 	return UVrmMetaObject::StaticClass();
 }
@@ -52,6 +63,13 @@ TSharedPtr<SWidget> FAssetTypeActions_VrmBase::GetThumbnailOverlay(const FAssetD
 	}
 	if (str.Len() == 0){
 		TWeakObjectPtr<UVrmLicenseObject> a = Cast<UVrmLicenseObject>(AssetData.GetAsset());
+		if (a.Get()) {
+			str = TEXT(" License ");
+			col.A = 128;
+		}
+	}
+	if (str.Len() == 0) {
+		TWeakObjectPtr<UVrm1LicenseObject> a = Cast<UVrm1LicenseObject>(AssetData.GetAsset());
 		if (a.Get()) {
 			str = TEXT(" License ");
 			col.A = 128;
@@ -103,8 +121,17 @@ void UVrmAssetListThumbnailRenderer::GetThumbnailSize(UObject* Object, float Zoo
 			if (tex) {
 				return Super::GetThumbnailSize(tex, Zoom, OutWidth, OutHeight);
 			}
+		}
+		if (a->Vrm1LicenseObject) {
+			auto tex = a->SmallThumbnailTexture;
+			if (tex == nullptr) {
+				tex = a->Vrm1LicenseObject->thumbnail;
+			}
+			if (tex) {
+				return Super::GetThumbnailSize(tex, Zoom, OutWidth, OutHeight);
+		}
 	}
-	}
+}
 	Super::GetThumbnailSize(Object, Zoom, OutWidth, OutHeight);
 }
 
@@ -121,11 +148,13 @@ void UVrmAssetListThumbnailRenderer::Draw(UObject* Object, int32 X, int32 Y, uin
 	if (tex == nullptr){
 		UVrmAssetListObject* a = Cast<UVrmAssetListObject>(Object);
 		if (a) {
-			sk = a->SkeletalMesh;
 			tex = a->SmallThumbnailTexture;
 			if (tex == nullptr) {
 				if (a->VrmLicenseObject) {
 					tex = a->VrmLicenseObject->thumbnail;
+				}
+				if (a->Vrm1LicenseObject) {
+					tex = a->Vrm1LicenseObject->thumbnail;
 				}
 			}
 		}
@@ -145,6 +174,15 @@ void UVrmAssetListThumbnailRenderer::Draw(UObject* Object, int32 X, int32 Y, uin
 			UVrmLicenseObject* a = Cast<UVrmLicenseObject>(Object);
 			if (a) {
 				UPackage *pk = a->GetOutermost();
+				GetObjectsWithOuter(pk, ret);
+				// no sk
+				tex = a->thumbnail;
+			}
+		}
+		{
+			UVrm1LicenseObject* a = Cast<UVrm1LicenseObject>(Object);
+			if (a) {
+				UPackage* pk = a->GetOutermost();
 				GetObjectsWithOuter(pk, ret);
 				// no sk
 				tex = a->thumbnail;

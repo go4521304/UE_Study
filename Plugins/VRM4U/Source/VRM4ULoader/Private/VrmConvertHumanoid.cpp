@@ -1,4 +1,4 @@
-// VRM4U Copyright (c) 2021-2022 Haruyoshi Yamamoto. This software is released under the MIT License.
+// VRM4U Copyright (c) 2021-2024 Haruyoshi Yamamoto. This software is released under the MIT License.
 
 #include "VrmConvertHumanoid.h"
 #include "VrmConvert.h"
@@ -28,8 +28,14 @@
 static void renameToHumanoidBone(USkeletalMesh *targetSK, const UVrmMetaObject *meta, const USkeletalMesh *srcSK) {
 
 	USkeleton *targetSkeleton = VRMGetSkeleton(targetSK);
-	UNodeMappingContainer * rig = VRMGetNodeMappingData(targetSK)[0];
-	UNodeMappingContainer *src_rig = VRMGetNodeMappingData(srcSK)[0];
+	UNodeMappingContainer* rig = nullptr;
+	if (VRMGetNodeMappingData(targetSK).Num()) {
+		rig = VRMGetNodeMappingData(targetSK)[0];
+	}
+	UNodeMappingContainer* src_rig = nullptr;
+	if (VRMGetNodeMappingData(srcSK).Num()) {
+		src_rig = VRMGetNodeMappingData(srcSK)[0];
+	}
 
 	if (meta == nullptr) {
 		return;
@@ -38,6 +44,28 @@ static void renameToHumanoidBone(USkeletalMesh *targetSK, const UVrmMetaObject *
 	auto &allbone = const_cast<TArray<FMeshBoneInfo> &>(targetSkeleton->GetReferenceSkeleton().GetRawRefBoneInfo());
 
 	TMap<FName, FName> changeTable;
+
+	{
+		bool bHasRoot = false;
+		for (auto& a : allbone) {
+			if (a.Name == TEXT("Root")) {
+				a.Name = TEXT("root");
+#if WITH_EDITORONLY_DATA
+				a.ExportName = TEXT("root");
+#endif
+				bHasRoot = true;
+				break;
+			}
+		}
+		if (bHasRoot == false) {
+			if (allbone[0].Name != TEXT("hip")) {
+				allbone[0].Name = TEXT("root");
+#if WITH_EDITORONLY_DATA
+				allbone[0].ExportName = TEXT("root");
+#endif
+			}
+		}
+	}
 
 	for (auto &a : allbone) {
 		auto p = meta->humanoidBoneTable.FindKey(a.Name.ToString());
@@ -67,7 +95,7 @@ static void renameToHumanoidBone(USkeletalMesh *targetSK, const UVrmMetaObject *
 
 #if WITH_EDITOR
 #if	UE_VERSION_OLDER_THAN(4,20,0)
-#else
+#elif UE_VERSION_OLDER_THAN(5,4,0)
 	if (src_rig) {
 		rig->SetSourceAsset(src_rig->GetSourceAsset());
 		rig->SetTargetAsset(targetSK);
@@ -92,6 +120,8 @@ static void renameToHumanoidBone(USkeletalMesh *targetSK, const UVrmMetaObject *
 		}
 		rig->PostEditChange();
 	}
+#else
+	//  ue5.4 no rig data
 #endif
 #endif
 }
@@ -99,13 +129,24 @@ static void renameToHumanoidBone(USkeletalMesh *targetSK, const UVrmMetaObject *
 static void renameToUE4Bone(USkeletalMesh *targetSK, UVrmMetaObject *meta, const USkeletalMesh *srcSK) {
 
 	USkeleton *targetSkeleton = VRMGetSkeleton(targetSK);
-	UNodeMappingContainer * rig = VRMGetNodeMappingData(targetSK)[0];
-	UNodeMappingContainer *src_rig = VRMGetNodeMappingData(srcSK)[0];
+	UNodeMappingContainer* rig = nullptr;
+	if (VRMGetNodeMappingData(targetSK).Num()) {
+		rig = VRMGetNodeMappingData(targetSK)[0];
+	}
+	UNodeMappingContainer* src_rig = nullptr;
+	if (VRMGetNodeMappingData(srcSK).Num()) {
+		src_rig = VRMGetNodeMappingData(srcSK)[0];
+	}
 
 	//k->RemoveBonesFromSkeleton()
 	auto &allbone = const_cast<TArray<FMeshBoneInfo> &>(targetSkeleton->GetReferenceSkeleton().GetRawRefBoneInfo());
 
 	TMap<FName, FName> changeTable;
+
+	allbone[0].Name = TEXT("root");
+#if WITH_EDITORONLY_DATA
+	allbone[0].ExportName = TEXT("root");
+#endif
 
 	for (auto &a : allbone) {
 
@@ -149,7 +190,8 @@ static void renameToUE4Bone(USkeletalMesh *targetSK, UVrmMetaObject *meta, const
 
 #if WITH_EDITOR
 #if	UE_VERSION_OLDER_THAN(4,20,0)
-#else
+#elif UE_VERSION_OLDER_THAN(5,4,0)
+
 	if (src_rig) {
 		rig->SetSourceAsset(src_rig->GetSourceAsset());
 		rig->SetTargetAsset(targetSK);
@@ -174,6 +216,8 @@ static void renameToUE4Bone(USkeletalMesh *targetSK, UVrmMetaObject *meta, const
 		}
 		rig->PostEditChange();
 	}
+#else
+	// ue5.4 no rig data
 #endif
 #endif
 }
@@ -216,15 +260,29 @@ bool VRMConverter::ConvertHumanoid(UVrmAssetListObject *vrmAssetList) {
 		USkeletalMesh *ss = nullptr;
 		UNodeMappingContainer *rr = nullptr;
 
-		if (i == 0) {
-			ss = DuplicateObject<USkeletalMesh>(src_sk, vrmAssetList->Package, *name_mesh);
-			base = DuplicateObject<USkeleton>(src_k, vrmAssetList->Package, *name_skeleton);
-			rr = VRM4U_NewObject<UNodeMappingContainer>(vrmAssetList->Package, *name_rig, RF_Public | RF_Standalone);
-		} else {
-			ss = DuplicateObject<USkeletalMesh>(src_sk, vrmAssetList->Package, *name_mesh);
-			base = DuplicateObject<USkeleton>(src_k, vrmAssetList->Package, *name_skeleton);
-			rr = VRM4U_NewObject<UNodeMappingContainer>(vrmAssetList->Package, *name_rig, RF_Public | RF_Standalone);
+#if WITH_EDITOR
+		{
+			auto p = vrmAssetList->Package;
+
+			if (i == 0) {
+				ss = VRM4U_DuplicateObject<USkeletalMesh>(src_sk, p, *name_mesh);
+				base = VRM4U_DuplicateObject<USkeleton>(src_k, p, *name_skeleton);
+				if (src_rig) {
+					rr = VRM4U_NewObject<UNodeMappingContainer>(p, *name_rig, RF_Public | RF_Standalone);
+				}
+			}else {
+				ss = VRM4U_DuplicateObject<USkeletalMesh>(src_sk, p, *name_mesh);
+				base = VRM4U_DuplicateObject<USkeleton>(src_k, p, *name_skeleton);
+				if (src_rig) {
+					rr = VRM4U_NewObject<UNodeMappingContainer>(p, *name_rig, RF_Public | RF_Standalone);
+				}
+			}
 		}
+#else
+		ss = const_cast<USkeletalMesh*>(src_sk);
+		base = const_cast<USkeleton*>(src_k);
+		if (i == 1) continue;
+#endif
 
 		new_sk[i] = ss;
 		new_k[i] = base;
@@ -296,6 +354,7 @@ bool VRMConverter::ConvertHumanoid(UVrmAssetListObject *vrmAssetList) {
 		int boneNo = 0;
 		TPair<FString, FString> prev;
 		for (auto& a : meta->humanoidBoneTable) {
+			if (ss==nullptr) break;
 			auto ind = VRMGetRefSkeleton(ss).FindBoneIndex(*(a.Value));
 
 			if (boneNo == 0) {

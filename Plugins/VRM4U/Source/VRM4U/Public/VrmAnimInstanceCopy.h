@@ -1,4 +1,4 @@
-// VRM4U Copyright (c) 2021-2022 Haruyoshi Yamamoto. This software is released under the MIT License.
+// VRM4U Copyright (c) 2021-2024 Haruyoshi Yamamoto. This software is released under the MIT License.
 
 #pragma once
 
@@ -12,6 +12,7 @@
 
 class UVrmAssetListObject;
 struct FAnimNode_VrmSpringBone;
+struct FAnimNode_VrmConstraint;
 
 USTRUCT()
 struct VRM4U_API FVrmAnimInstanceCopyProxy : public FAnimInstanceProxy {
@@ -21,9 +22,11 @@ public:
 
 	float CurrentDeltaTime = 0.f;
 	bool bIgnoreVRMSwingBone = false;
+	bool bIgnoreVRMConstraint = false;
 	bool bIgnoreWindDirectionalSource = false;
 	int CalcCount = 0;
-	TSharedPtr<FAnimNode_VrmSpringBone> SpringBoneNode;
+	TSharedPtr<FAnimNode_VrmSpringBone> Node_SpringBone;
+	TSharedPtr<FAnimNode_VrmConstraint> Node_Constraint;
 
 	bool bUseAnimStop = false;
 	bool bAnimStop = false;

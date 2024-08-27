@@ -1,9 +1,11 @@
-// VRM4U Copyright (c) 2021-2022 Haruyoshi Yamamoto. This software is released under the MIT License.
+// VRM4U Copyright (c) 2021-2024 Haruyoshi Yamamoto. This software is released under the MIT License.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "Engine/SkeletalMesh.h"
+#include "Animation/Skeleton.h"
 #include "VrmImportMaterialSet.h"
 #include "VrmUtil.h"
 #include "VrmAssetListObject.generated.h"
@@ -14,6 +16,7 @@ class USkeletalMesh;
 class USkeleton;
 class UVrmMetaObject;
 class UVrmLicenseObject;
+class UVrm1LicenseObject;
 struct FReturnedData;
 class UNodeMappingContainer;
 
@@ -52,6 +55,15 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InMaterial")
 	UVrmImportMaterialSet* GLTFSet;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InMaterial")
+	UVrmImportMaterialSet* UEFNUnlitSet;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InMaterial")
+	UVrmImportMaterialSet* UEFNLitSet;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InMaterial")
+	UVrmImportMaterialSet* UEFNSSSProfileSet;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InMaterial")
 	UVrmImportMaterialSet* CustomSet;
@@ -128,6 +140,9 @@ public:
 	UVrmLicenseObject* VrmLicenseObject;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Out")
+	UVrm1LicenseObject* Vrm1LicenseObject;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Out")
 	USkeletalMesh* SkeletalMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Out")
@@ -154,6 +169,12 @@ public:
 	UNodeMappingContainer *HumanoidRig;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Out")
+	UPoseAsset *PoseBody;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Out")
+	UPoseAsset *PoseFace;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Out")
 	TArray<bool> MaterialFlag_Translucent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Out")
@@ -176,6 +197,9 @@ public:
 
 	UPROPERTY()
 	UPackage *Package;
+
+	UPROPERTY()
+	UVrmAssetListObject* ReimportBase;
 
 	UPROPERTY()
 	FString FileFullPathName;
@@ -203,5 +227,52 @@ public:
 
 	TSharedPtr<FReturnedData> MeshReturnedData;
 	//FReturnedData *Result;
+
+#if WITH_EDITORONLY_DATA
+
+//#if	UE_VERSION_OLDER_THAN(5,0,0)
+//	typedef LocalImportData UAssetImportData;
+//#else
+//	typedef LocalImportData TObjectPtr<class UAssetImportData>
+//#endif
+
+	// VRM4U_PRECOMPILE_500
+	UPROPERTY(VisibleAnywhere, Instanced, Category = ImportSettings)
+	class UAssetImportData *AssetImportData = nullptr;
+	//TObjectPtr<class UAssetImportData> AssetImportData;
+
+#if	UE_VERSION_OLDER_THAN(5,0,0)
+	//class UAssetImportData* AssetImportData = nullptr;
+#else
+	//TObjectPtr<class UAssetImportData> AssetImportData;
+#endif
+
+#endif
+
+
+#if WITH_EDITOR
+
+
+	virtual void GetAssetRegistryTags(TArray<FAssetRegistryTag>& OutTags) const override;
+	// Import data for this 
+	void WaitUntilAsyncPropertyReleased() const;
+
+
+	class UAssetImportData* GetAssetImportData() const
+	{
+		//WaitUntilAsyncPropertyReleased(ESkeletalMeshAsyncProperties::AssetImportData);
+		PRAGMA_DISABLE_DEPRECATION_WARNINGS
+			return AssetImportData;
+		PRAGMA_ENABLE_DEPRECATION_WARNINGS
+	}
+
+	void SetAssetImportData(class UAssetImportData* InAssetImportData)
+	{
+		//WaitUntilAsyncPropertyReleased(ESkeletalMeshAsyncProperties::AssetImportData);
+		PRAGMA_DISABLE_DEPRECATION_WARNINGS
+			AssetImportData = InAssetImportData;
+		PRAGMA_ENABLE_DEPRECATION_WARNINGS
+	}
+#endif
 
 };
