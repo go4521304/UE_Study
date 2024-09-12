@@ -79,7 +79,9 @@ protected:
 
 	/** Called for Focus input */
 	void EnemyFocus(const FInputActionValue& Value);
-			
+
+	/** Called for Focus input */
+	void Attack(const FInputActionValue& Value);
 
 protected:
 	// APawn interface

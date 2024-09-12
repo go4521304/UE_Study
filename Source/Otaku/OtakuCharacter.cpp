@@ -107,13 +107,22 @@ void AOtakuCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		// Walk
 		EnhancedInputComponent->BindAction(WalkAction, ETriggerEvent::Triggered, this, &AOtakuCharacter::Walk);
 
+		// Focus
 		TSoftObjectPtr<UInputAction> FocusActionPtr;
 		FocusActionPtr = FSoftObjectPath(TEXT("/Script/EnhancedInput.InputAction'/Game/ThirdPerson/Input/Actions/IA_Focus.IA_Focus'"));
-
 		FocusActionPtr.LoadSynchronous();
 		if (FocusActionPtr.IsValid())
 		{
 			EnhancedInputComponent->BindAction(FocusActionPtr.Get(), ETriggerEvent::Triggered, this, &AOtakuCharacter::EnemyFocus);
+		}
+
+		// Attack
+		TSoftObjectPtr<UInputAction> AttackActionPtr;
+		AttackActionPtr = FSoftObjectPath(TEXT("/Script/EnhancedInput.InputAction'/Game/ThirdPerson/Input/Actions/IA_Attack.IA_Attack'"));
+		AttackActionPtr.LoadSynchronous();
+		if (AttackActionPtr.IsValid())
+		{
+			EnhancedInputComponent->BindAction(AttackActionPtr.Get(), ETriggerEvent::Triggered, this, &AOtakuCharacter::Attack);
 		}
 	}
 	else
@@ -226,4 +235,14 @@ void AOtakuCharacter::EnemyFocus(const FInputActionValue& Value)
 			GetController()->SetControlRotation(FocusRotation);
 		}
 	}
+}
+
+void AOtakuCharacter::Attack(const FInputActionValue& Value)
+{
+	if (bFocusMode == false)
+	{
+		return;
+	}
+
+	UE_LOG(LogTemp, Error, TEXT("Attack!"));
 }
