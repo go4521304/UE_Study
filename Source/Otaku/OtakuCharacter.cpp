@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "OtakuAnimInstance.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -74,6 +75,14 @@ void AOtakuCharacter::BeginPlay()
 		WeaponMeshComp->SetSkeletalMesh(WeaponMesh);
 		WeaponMeshComp->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("Weapon"));
 	}
+
+
+	USkeletalMeshComponent* CharaMesh = GetMesh();
+	if (IsValid(CharaMesh) == false)
+	{
+		return;
+	}
+	AnimInst = Cast<UOtakuAnimInstance>(CharaMesh->GetAnimInstance());
 
 }
 
@@ -239,10 +248,18 @@ void AOtakuCharacter::EnemyFocus(const FInputActionValue& Value)
 
 void AOtakuCharacter::Attack(const FInputActionValue& Value)
 {
-	if (bFocusMode == false)
+	if (bFocusMode == false || IsValid(AnimInst) == false)
 	{
 		return;
 	}
 
-	UE_LOG(LogTemp, Error, TEXT("Attack!"));
+	if (AnimInst->IsPlayingAttackAnim())
+	{
+		AnimInst->InputAttackAction();
+	}
+	else
+	{
+		AnimInst->PlayAttackAnim();
+	}
+
 }
