@@ -13,6 +13,8 @@ class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
 class UOtakuAnimInstance;
+class UAnimMontage;
+class UComboActionData;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -100,7 +102,20 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 private:
-	UPROPERTY()
-	UOtakuAnimInstance* AnimInst;
+	void ComboActionBegin();
+	void ComboActionEnd(UAnimMontage* TargetMontage, bool IsProperlyEnded);
+	void SetComboCheckTimer();
+	void ComboCheck();
+
+private:
+	UPROPERTY(EditAnywhere, Category=Animation)
+	TObjectPtr<UAnimMontage> ComboActionMontage;
+
+	UPROPERTY(EditAnywhere, Category=Attack, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UComboActionData> ComboActionData;
+
+	int32 CurrentCombo;
+	FTimerHandle ComboTimerHandle;
+	bool HasNextComboCommand;
 };
 

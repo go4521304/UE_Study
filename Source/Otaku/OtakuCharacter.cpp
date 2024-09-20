@@ -11,6 +11,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "OtakuAnimInstance.h"
+#include "Animation/AnimMontage.h"
+#include "ComboActionData.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -59,8 +61,9 @@ AOtakuCharacter::AOtakuCharacter()
 	WeaponMeshComp->SetupAttachment(GetMesh());
 
 	bFocusMode = false;
-
 	WalkSpeed = 230.0f;
+	CurrentCombo = 0;
+	HasNextComboCommand = false;
 
 }
 
@@ -75,14 +78,6 @@ void AOtakuCharacter::BeginPlay()
 		WeaponMeshComp->SetSkeletalMesh(WeaponMesh);
 		WeaponMeshComp->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("Weapon"));
 	}
-
-
-	USkeletalMeshComponent* CharaMesh = GetMesh();
-	if (IsValid(CharaMesh) == false)
-	{
-		return;
-	}
-	AnimInst = Cast<UOtakuAnimInstance>(CharaMesh->GetAnimInstance());
 
 }
 
@@ -248,18 +243,93 @@ void AOtakuCharacter::EnemyFocus(const FInputActionValue& Value)
 
 void AOtakuCharacter::Attack(const FInputActionValue& Value)
 {
-	if (bFocusMode == false || IsValid(AnimInst) == false)
+	if (bFocusMode == false)
+	{
+		return;
+	}
+	
+	if (CurrentCombo == 0)
+	{
+		ComboActionBegin();
+		UE_LOG(LogTemp, Error, TEXT("ActionBegin"));
+		return;
+	}
+
+	if (ComboTimerHandle.IsValid() == false)
+	{
+		HasNextComboCommand = false;
+	}
+	else
+	{
+		HasNextComboCommand = true;
+	}
+}
+
+void AOtakuCharacter::ComboActionBegin()
+{
+	CurrentCombo = 1;
+
+	const float AttackSpeedRate = 1.0f;
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	AnimInstance->Montage_Play(ComboActionMontage, AttackSpeedRate);
+
+	FOnMontageEnded EndDelegate;
+	EndDelegate.BindUObject(this, &AOtakuCharacter::ComboActionEnd);
+	AnimInstance->Montage_SetEndDelegate(EndDelegate, ComboActionMontage);
+
+	ComboTimerHandle.Invalidate();
+	SetComboCheckTimer();
+}
+
+void AOtakuCharacter::ComboActionEnd(UAnimMontage* TargetMontage, bool IsProperlyEnded)
+{
+	ensure(CurrentCombo != 0);
+
+	CurrentCombo = 0;
+	UE_LOG(LogTemp, Error, TEXT("ActionEnd"));
+
+}
+
+void AOtakuCharacter::SetComboCheckTimer()
+{
+	int32 ComboIndex = CurrentCombo - 1;
+	
+	if (IsValid(ComboActionData) == false || ComboActionData->EffectiveFrameCount.IsValidIndex(ComboIndex) == false)
 	{
 		return;
 	}
 
-	if (AnimInst->IsPlayingAttackAnim())
+	const float AttackSpeedRate = ComboActionMontage->RateScale;
+	
+	float ComboEffectiveTime = (ComboActionData->EffectiveFrameCount[ComboIndex] / ComboActionData->FrameRate) / AttackSpeedRate;
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	ComboEffectiveTime -= AnimInstance->Montage_GetPosition(ComboActionMontage);
+
+	if (ComboEffectiveTime <= 0.0f)
 	{
-		AnimInst->InputAttackAction();
-	}
-	else
-	{
-		AnimInst->PlayAttackAnim();
+		return;
 	}
 
+	GetWorld()->GetTimerManager().SetTimer(ComboTimerHandle, this, &AOtakuCharacter::ComboCheck, ComboEffectiveTime, false);
+}
+
+void AOtakuCharacter::ComboCheck()
+{
+	ComboTimerHandle.Invalidate();
+	if (HasNextComboCommand)
+	{
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+		CurrentCombo = FMath::Clamp(CurrentCombo + 1, 1, ComboActionData->MaxComboCount);
+		FName CurrentSection = AnimInstance->Montage_GetCurrentSection(ComboActionMontage);
+		FName NextSection = *FString::Printf(TEXT("%s%d"), *ComboActionData->MontageSectionNamePrefix, CurrentCombo);
+		AnimInstance->Montage_SetNextSection(CurrentSection, NextSection, ComboActionMontage);
+		SetComboCheckTimer();
+
+		AnimInstance;
+		HasNextComboCommand = false;
+
+		UE_LOG(LogTemp, Error, TEXT("Combo %f"), AnimInstance->Montage_GetPosition(ComboActionMontage));
+	}
 }
