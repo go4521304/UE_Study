@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{AD526E53-3629-479D-B393-0F54F1FAE0C0}" SchemaVersion="119">
+	<AudioObjects>
+		<WorkUnit Name="Default Work Unit" ID="{AD526E53-3629-479D-B393-0F54F1FAE0C0}" PersistMode="Standalone">
+			<ChildrenList>
+				<Folder Name="SFX" ID="{D3D4BE8E-DB4D-433C-8DC6-3FD00C3C76C5}" ShortID="285170287">
+					<ChildrenList>
+						<Folder Name="Character" ID="{933FFEC6-A63C-499C-8DCA-38C22372079D}" ShortID="415665013">
+							<ChildrenList>
+								<Folder Name="FootStep" ID="{5398C0C3-15A3-4BE8-B653-031E6C466A5B}" ShortID="84081151">
+									<ChildrenList>
+										<RandomSequenceContainer Name="SFX_FootStep" ID="{B0301545-A856-478C-99BA-E4960AD376EC}" ShortID="11817894">
+											<PropertyList>
+												<Property Name="3DSpatialization" Type="int16" Value="2"/>
+												<Property Name="RandomAvoidRepeatingCount" Type="int32" Value="2"/>
+												<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
+												<Property Name="Volume" Type="Real64">
+													<ValueList>
+														<Value>-3</Value>
+													</ValueList>
+												</Property>
+											</PropertyList>
+											<ReferenceList>
+												<Reference Name="Attenuation">
+													<Custom>
+														<Attenuation Name="Attenuation (Custom)" ID="{54FDC198-A095-4010-B481-E80B9D6C8048}" ShortID="615870321">
+															<PropertyList>
+																<Property Name="ConeUse" Type="bool">
+																	<ValueList>
+																		<Value>True</Value>
+																	</ValueList>
+																</Property>
+																<Property Name="RadiusMax" Type="Real64" Value="750"/>
+															</PropertyList>
+															<CurveUsageInfoList>
+																<VolumeDryUsage>
+																	<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
+																		<Curve Name="VolumeDry" ID="{A0BBA4EA-3401-4D41-A971-CB733E5F33D5}">
+																			<PropertyList>
+																				<Property Name="Flags" Type="int32" Value="3"/>
+																			</PropertyList>
+																			<PointList>
+																				<Point>
+																					<XPos>0</XPos>
+																					<YPos>0</YPos>
+																					<Flags>5</Flags>
+																				</Point>
+																				<Point>
+																					<XPos>750</XPos>
+																					<YPos>-200</YPos>
+																					<Flags>37</Flags>
+																				</Point>
+																			</PointList>
+																		</Curve>
+																	</CurveUsageInfo>
+																</VolumeDryUsage>
+																<VolumeWetGameUsage>
+																	<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+																</VolumeWetGameUsage>
+																<VolumeWetUserUsage>
+																	<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+																</VolumeWetUserUsage>
+																<LowPassFilterUsage>
+																	<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+																</LowPassFilterUsage>
+																<HighPassFilterUsage>
+																	<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+																</HighPassFilterUsage>
+																<SpreadUsage>
+																	<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+																</SpreadUsage>
+																<FocusUsage>
+																	<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+																</FocusUsage>
+																<ObstructionVolumeUsage>
+																	<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+																</ObstructionVolumeUsage>
+																<ObstructionLPFUsage>
+																	<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+																</ObstructionLPFUsage>
+																<ObstructionHPFUsage>
+																	<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+																</ObstructionHPFUsage>
+																<OcclusionVolumeUsage>
+																	<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+																</OcclusionVolumeUsage>
+																<OcclusionLPFUsage>
+																	<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+																</OcclusionLPFUsage>
+																<OcclusionHPFUsage>
+																	<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+																</OcclusionHPFUsage>
+																<DiffractionVolumeUsage>
+																	<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+																</DiffractionVolumeUsage>
+																<DiffractionLPFUsage>
+																	<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+																</DiffractionLPFUsage>
+																<DiffractionHPFUsage>
+																	<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+																</DiffractionHPFUsage>
+																<TransmissionVolumeUsage>
+																	<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+																</TransmissionVolumeUsage>
+																<TransmissionLPFUsage>
+																	<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+																</TransmissionLPFUsage>
+																<TransmissionHPFUsage>
+																	<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+																</TransmissionHPFUsage>
+															</CurveUsageInfoList>
+														</Attenuation>
+													</Custom>
+												</Reference>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{2F6A5BDD-E98A-41DE-BF5C-9EC209F353D5}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="SFX" ID="{E28B2352-584C-4527-A02D-7873F374EF85}" WorkUnitID="{5922EB02-F5C7-4929-872A-80608378F7BA}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<Sound Name="SFX_FootStep_Cement_Run_6" ID="{83D22670-B6F5-43F7-BF92-293619C82A4F}" ShortID="992534882">
+													<PropertyList>
+														<Property Name="OverrideConversion" Type="bool" Value="True"/>
+													</PropertyList>
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{2F6A5BDD-E98A-41DE-BF5C-9EC209F353D5}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{5922EB02-F5C7-4929-872A-80608378F7BA}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="SFX_FootStep_Cement_Run_6" ID="{EACBC873-00D7-48ED-8568-28B6CFFB757A}">
+															<Language>SFX</Language>
+															<AudioFile>Cement_Run\SFX_FootStep_Cement_Run_6.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="684252102"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ActiveSourceList>
+														<ActiveSource Name="SFX_FootStep_Cement_Run_6" ID="{EACBC873-00D7-48ED-8568-28B6CFFB757A}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="SFX_FootStep_Cement_Run_4" ID="{876A2277-CF74-4B86-AFA7-8792487792BF}" ShortID="157773522">
+													<PropertyList>
+														<Property Name="OverrideConversion" Type="bool" Value="True"/>
+													</PropertyList>
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{2F6A5BDD-E98A-41DE-BF5C-9EC209F353D5}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{5922EB02-F5C7-4929-872A-80608378F7BA}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="SFX_FootStep_Cement_Run_4" ID="{00824A7E-E114-453B-AB11-10B63D8AABD6}">
+															<Language>SFX</Language>
+															<AudioFile>Cement_Run\SFX_FootStep_Cement_Run_4.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="967559710"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ActiveSourceList>
+														<ActiveSource Name="SFX_FootStep_Cement_Run_4" ID="{00824A7E-E114-453B-AB11-10B63D8AABD6}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="SFX_FootStep_Cement_Run_5" ID="{AEB1DB52-6C22-43FB-B648-E82A85B94830}" ShortID="655263629">
+													<PropertyList>
+														<Property Name="OverrideConversion" Type="bool" Value="True"/>
+													</PropertyList>
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{2F6A5BDD-E98A-41DE-BF5C-9EC209F353D5}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{5922EB02-F5C7-4929-872A-80608378F7BA}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="SFX_FootStep_Cement_Run_5" ID="{B912CA6D-8E2F-4611-ABA9-E8A57F93B534}">
+															<Language>SFX</Language>
+															<AudioFile>Cement_Run\SFX_FootStep_Cement_Run_5.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="803542052"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ActiveSourceList>
+														<ActiveSource Name="SFX_FootStep_Cement_Run_5" ID="{B912CA6D-8E2F-4611-ABA9-E8A57F93B534}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="SFX_FootStep_Cement_Run_1" ID="{580433F0-87ED-4195-9C94-3EE1F6A2E534}" ShortID="202167672">
+													<PropertyList>
+														<Property Name="OverrideConversion" Type="bool" Value="True"/>
+													</PropertyList>
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{2F6A5BDD-E98A-41DE-BF5C-9EC209F353D5}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{5922EB02-F5C7-4929-872A-80608378F7BA}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="SFX_FootStep_Cement_Run_1" ID="{08FD666C-9727-4673-ADBB-1EE9D302DCB8}">
+															<Language>SFX</Language>
+															<AudioFile>Cement_Run\SFX_FootStep_Cement_Run_1.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="143669070"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ActiveSourceList>
+														<ActiveSource Name="SFX_FootStep_Cement_Run_1" ID="{08FD666C-9727-4673-ADBB-1EE9D302DCB8}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="SFX_FootStep_Cement_Run_3" ID="{46178319-C91F-44C9-B520-65B91723CC05}" ShortID="413646127">
+													<PropertyList>
+														<Property Name="OverrideConversion" Type="bool" Value="True"/>
+													</PropertyList>
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{2F6A5BDD-E98A-41DE-BF5C-9EC209F353D5}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{5922EB02-F5C7-4929-872A-80608378F7BA}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="SFX_FootStep_Cement_Run_3" ID="{4FD298B6-1775-4D71-B1F4-28E32B300DC0}">
+															<Language>SFX</Language>
+															<AudioFile>Cement_Run\SFX_FootStep_Cement_Run_3.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="713332516"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ActiveSourceList>
+														<ActiveSource Name="SFX_FootStep_Cement_Run_3" ID="{4FD298B6-1775-4D71-B1F4-28E32B300DC0}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="SFX_FootStep_Cement_Run_2" ID="{E67D888E-12EB-43DC-9E73-F83DCB9AC3E8}" ShortID="217211187">
+													<PropertyList>
+														<Property Name="OverrideConversion" Type="bool" Value="True"/>
+													</PropertyList>
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{2F6A5BDD-E98A-41DE-BF5C-9EC209F353D5}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{5922EB02-F5C7-4929-872A-80608378F7BA}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="SFX_FootStep_Cement_Run_2" ID="{32739C1B-25E6-4BEC-AB9F-CD49FD41C079}">
+															<Language>SFX</Language>
+															<AudioFile>Cement_Run\SFX_FootStep_Cement_Run_2.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="1068264712"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ActiveSourceList>
+														<ActiveSource Name="SFX_FootStep_Cement_Run_2" ID="{32739C1B-25E6-4BEC-AB9F-CD49FD41C079}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+											</ChildrenList>
+										</RandomSequenceContainer>
+									</ChildrenList>
+								</Folder>
+							</ChildrenList>
+						</Folder>
+					</ChildrenList>
+				</Folder>
+			</ChildrenList>
+		</WorkUnit>
+	</AudioObjects>
+</WwiseDocument>

@@ -1,0 +1,103 @@
+{
+ "SoundBanksInfo": {
+  "Platform": "Windows",
+  "BasePlatform": "Windows",
+  "SchemaVersion": "16",
+  "SoundBankVersion": "150",
+  "SoundBanks": [
+   {
+    "Id": "393239870",
+    "Type": "User",
+    "GUID": "{F30886F7-4D38-42E8-86BD-20BB2540946A}",
+    "Language": "SFX",
+    "Hash": "{3B6DE3FE-774B-8AC2-3409-3518F3FDA762}",
+    "ObjectPath": "\\SoundBanks\\Default Work Unit\\SFX",
+    "ShortName": "SFX",
+    "Path": "SFX.bnk",
+    "Media": [
+     {
+      "Id": "143669070",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Cement_Run\\SFX_FootStep_Cement_Run_1.wav",
+      "CachePath": "SFX/Cement_Run/SFX_FootStep_Cement_Run_1_8E324C96.wem"
+     },
+     {
+      "Id": "684252102",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Cement_Run\\SFX_FootStep_Cement_Run_6.wav",
+      "CachePath": "SFX/Cement_Run/SFX_FootStep_Cement_Run_6_8E324C96.wem"
+     },
+     {
+      "Id": "713332516",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Cement_Run\\SFX_FootStep_Cement_Run_3.wav",
+      "CachePath": "SFX/Cement_Run/SFX_FootStep_Cement_Run_3_8E324C96.wem"
+     },
+     {
+      "Id": "803542052",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Cement_Run\\SFX_FootStep_Cement_Run_5.wav",
+      "CachePath": "SFX/Cement_Run/SFX_FootStep_Cement_Run_5_8E324C96.wem"
+     },
+     {
+      "Id": "967559710",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Cement_Run\\SFX_FootStep_Cement_Run_4.wav",
+      "CachePath": "SFX/Cement_Run/SFX_FootStep_Cement_Run_4_8E324C96.wem"
+     },
+     {
+      "Id": "1068264712",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Cement_Run\\SFX_FootStep_Cement_Run_2.wav",
+      "CachePath": "SFX/Cement_Run/SFX_FootStep_Cement_Run_2_8E324C96.wem"
+     }
+    ],
+    "Events": [
+     {
+      "Id": "57417936",
+      "Name": "Play_SFX_FootStep",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_SFX_FootStep",
+      "GUID": "{E505B6BE-7D2E-469D-8C10-2A3945933F22}",
+      "MaxAttenuation": "500",
+      "DurationType": "OneShot",
+      "DurationMin": "0.3314966",
+      "DurationMax": "0.33151928",
+      "MediaRefs": [
+       {
+        "Id": "143669070"
+       },
+       {
+        "Id": "684252102"
+       },
+       {
+        "Id": "713332516"
+       },
+       {
+        "Id": "803542052"
+       },
+       {
+        "Id": "967559710"
+       },
+       {
+        "Id": "1068264712"
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "FileHash": "{E708B068-1DD0-B505-9B19-563371B50A9D}"
+ }
+}

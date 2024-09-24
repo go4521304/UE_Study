@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{7B7413D2-1F48-4A27-BD69-C605175C372F}" SchemaVersion="119">
+	<SoundBanks>
+		<WorkUnit Name="Default Work Unit" ID="{7B7413D2-1F48-4A27-BD69-C605175C372F}" PersistMode="Standalone">
+			<ChildrenList>
+				<SoundBank Name="SFX" ID="{F30886F7-4D38-42E8-86BD-20BB2540946A}">
+					<ObjectInclusionList>
+						<ObjectRef Name="Play_SFX_FootStep" ID="{E505B6BE-7D2E-469D-8C10-2A3945933F22}" WorkUnitID="{28842980-E628-4C16-9D80-9B485BD594F6}" Origin="Manual" Filter="7"/>
+					</ObjectInclusionList>
+					<ObjectExclusionList/>
+					<GameSyncExclusionList/>
+				</SoundBank>
+			</ChildrenList>
+		</WorkUnit>
+	</SoundBanks>
+</WwiseDocument>

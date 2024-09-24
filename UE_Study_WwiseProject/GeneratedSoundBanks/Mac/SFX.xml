@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoundBanksInfo Platform="Mac" BasePlatform="Mac" SchemaVersion="16" SoundBankVersion="150">
+	<SoundBanks>
+		<SoundBank Id="393239870" Type="User" GUID="{F30886F7-4D38-42E8-86BD-20BB2540946A}" Language="SFX" Hash="{3B6DE3FE-774B-8AC2-3409-3518F3FDA762}">
+			<ObjectPath>\SoundBanks\Default Work Unit\SFX</ObjectPath>
+			<ShortName>SFX</ShortName>
+			<Path>SFX.bnk</Path>
+			<Media>
+				<File Id="143669070" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>Cement_Run\SFX_FootStep_Cement_Run_1.wav</ShortName>
+					<CachePath>SFX/Cement_Run/SFX_FootStep_Cement_Run_1_8E324C96.wem</CachePath>
+				</File>
+				<File Id="684252102" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>Cement_Run\SFX_FootStep_Cement_Run_6.wav</ShortName>
+					<CachePath>SFX/Cement_Run/SFX_FootStep_Cement_Run_6_8E324C96.wem</CachePath>
+				</File>
+				<File Id="713332516" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>Cement_Run\SFX_FootStep_Cement_Run_3.wav</ShortName>
+					<CachePath>SFX/Cement_Run/SFX_FootStep_Cement_Run_3_8E324C96.wem</CachePath>
+				</File>
+				<File Id="803542052" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>Cement_Run\SFX_FootStep_Cement_Run_5.wav</ShortName>
+					<CachePath>SFX/Cement_Run/SFX_FootStep_Cement_Run_5_8E324C96.wem</CachePath>
+				</File>
+				<File Id="967559710" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>Cement_Run\SFX_FootStep_Cement_Run_4.wav</ShortName>
+					<CachePath>SFX/Cement_Run/SFX_FootStep_Cement_Run_4_8E324C96.wem</CachePath>
+				</File>
+				<File Id="1068264712" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>Cement_Run\SFX_FootStep_Cement_Run_2.wav</ShortName>
+					<CachePath>SFX/Cement_Run/SFX_FootStep_Cement_Run_2_8E324C96.wem</CachePath>
+				</File>
+			</Media>
+			<Events>
+				<Event Id="57417936" Name="Play_SFX_FootStep" ObjectPath="\Events\Default Work Unit\Play_SFX_FootStep" GUID="{E505B6BE-7D2E-469D-8C10-2A3945933F22}" MaxAttenuation="500" DurationType="OneShot" DurationMin="0.3314966" DurationMax="0.33151928">
+					<MediaRefs>
+						<MediaRef Id="143669070"/>
+						<MediaRef Id="684252102"/>
+						<MediaRef Id="713332516"/>
+						<MediaRef Id="803542052"/>
+						<MediaRef Id="967559710"/>
+						<MediaRef Id="1068264712"/>
+					</MediaRefs>
+				</Event>
+			</Events>
+		</SoundBank>
+	</SoundBanks>
+	<FileHash>{55334AF0-3E3A-91FC-431C-CF769E7907F1}</FileHash>
+</SoundBanksInfo>

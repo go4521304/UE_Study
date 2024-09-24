@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{28842980-E628-4C16-9D80-9B485BD594F6}" SchemaVersion="119">
+	<Events>
+		<WorkUnit Name="Default Work Unit" ID="{28842980-E628-4C16-9D80-9B485BD594F6}" PersistMode="Standalone">
+			<ChildrenList>
+				<Event Name="Play_SFX_FootStep" ID="{E505B6BE-7D2E-469D-8C10-2A3945933F22}">
+					<ChildrenList>
+						<Action Name="" ID="{921717AB-9768-43D5-A1C8-10310F3F5C33}" ShortID="930406172">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="SFX_FootStep" ID="{B0301545-A856-478C-99BA-E4960AD376EC}" WorkUnitID="{AD526E53-3629-479D-B393-0F54F1FAE0C0}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+			</ChildrenList>
+		</WorkUnit>
+	</Events>
+</WwiseDocument>
