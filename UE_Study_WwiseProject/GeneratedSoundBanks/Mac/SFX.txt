@@ -1,0 +1,11 @@
+Event	ID	Name			Wwise Object Path	Notes
+	57417936	Play_SFX_FootStep			\Default Work Unit\Play_SFX_FootStep	
+
+In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
+	143669070	SFX_FootStep_Cement_Run_1	D:\Unreal_5\UE_Study\UE_Study_WwiseProject\.cache\Mac\SFX\Cement_Run\SFX_FootStep_Cement_Run_1_8E324C96.wem		\Actor-Mixer Hierarchy\Default Work Unit\SFX\Character\FootStep\SFX_FootStep\SFX_FootStep_Cement_Run_1		4068
+	684252102	SFX_FootStep_Cement_Run_6	D:\Unreal_5\UE_Study\UE_Study_WwiseProject\.cache\Mac\SFX\Cement_Run\SFX_FootStep_Cement_Run_6_8E324C96.wem		\Actor-Mixer Hierarchy\Default Work Unit\SFX\Character\FootStep\SFX_FootStep\SFX_FootStep_Cement_Run_6		3872
+	713332516	SFX_FootStep_Cement_Run_3	D:\Unreal_5\UE_Study\UE_Study_WwiseProject\.cache\Mac\SFX\Cement_Run\SFX_FootStep_Cement_Run_3_8E324C96.wem		\Actor-Mixer Hierarchy\Default Work Unit\SFX\Character\FootStep\SFX_FootStep\SFX_FootStep_Cement_Run_3		4151
+	803542052	SFX_FootStep_Cement_Run_5	D:\Unreal_5\UE_Study\UE_Study_WwiseProject\.cache\Mac\SFX\Cement_Run\SFX_FootStep_Cement_Run_5_8E324C96.wem		\Actor-Mixer Hierarchy\Default Work Unit\SFX\Character\FootStep\SFX_FootStep\SFX_FootStep_Cement_Run_5		4092
+	967559710	SFX_FootStep_Cement_Run_4	D:\Unreal_5\UE_Study\UE_Study_WwiseProject\.cache\Mac\SFX\Cement_Run\SFX_FootStep_Cement_Run_4_8E324C96.wem		\Actor-Mixer Hierarchy\Default Work Unit\SFX\Character\FootStep\SFX_FootStep\SFX_FootStep_Cement_Run_4		3805
+	1068264712	SFX_FootStep_Cement_Run_2	D:\Unreal_5\UE_Study\UE_Study_WwiseProject\.cache\Mac\SFX\Cement_Run\SFX_FootStep_Cement_Run_2_8E324C96.wem		\Actor-Mixer Hierarchy\Default Work Unit\SFX\Character\FootStep\SFX_FootStep\SFX_FootStep_Cement_Run_2		3500
+
