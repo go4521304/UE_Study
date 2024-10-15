@@ -81,6 +81,11 @@ void AOtakuCharacter::BeginPlay()
 
 }
 
+void AOtakuCharacter::AttackHitCheck()
+{
+	UE_LOG(LogTemp, Error, TEXT("AttackHitCheck"));
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Input
 
@@ -126,7 +131,7 @@ void AOtakuCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		AttackActionPtr.LoadSynchronous();
 		if (AttackActionPtr.IsValid())
 		{
-			EnhancedInputComponent->BindAction(AttackActionPtr.Get(), ETriggerEvent::Triggered, this, &AOtakuCharacter::Attack);
+			EnhancedInputComponent->BindAction(AttackActionPtr.Get(), ETriggerEvent::Triggered, this, &AOtakuCharacter::AttackAction);
 		}
 	}
 	else
@@ -241,7 +246,7 @@ void AOtakuCharacter::EnemyFocus(const FInputActionValue& Value)
 	}
 }
 
-void AOtakuCharacter::Attack(const FInputActionValue& Value)
+void AOtakuCharacter::AttackAction(const FInputActionValue& Value)
 {
 	if (bFocusMode == false)
 	{

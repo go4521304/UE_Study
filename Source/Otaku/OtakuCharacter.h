@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "AnimAttackInterface.h"
 #include "OtakuCharacter.generated.h"
 
 class USpringArmComponent;
@@ -19,7 +20,7 @@ class UComboActionData;
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 UCLASS(config=Game)
-class AOtakuCharacter : public ACharacter
+class AOtakuCharacter : public ACharacter, public IAnimAttackInterface
 {
 	GENERATED_BODY()
 
@@ -70,7 +71,6 @@ public:
 	
 
 protected:
-
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
 
@@ -84,7 +84,7 @@ protected:
 	void EnemyFocus(const FInputActionValue& Value);
 
 	/** Called for Focus input */
-	void Attack(const FInputActionValue& Value);
+	void AttackAction(const FInputActionValue& Value);
 
 protected:
 	// APawn interface
@@ -94,6 +94,10 @@ protected:
 	
 	// To add mapping context
 	virtual void BeginPlay();
+
+	// IAnimAttackInterface interface
+	virtual void AttackHitCheck() override;
+
 
 public:
 	/** Returns CameraBoom subobject **/
