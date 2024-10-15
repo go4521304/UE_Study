@@ -16,6 +16,7 @@ struct FInputActionValue;
 class UOtakuAnimInstance;
 class UAnimMontage;
 class UComboActionData;
+class AOtakuWeapon;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -54,10 +55,10 @@ class AOtakuCharacter : public ACharacter, public IAnimAttackInterface
 
 	/** Weapon Actor */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
-	TSoftObjectPtr<class USkeletalMesh> WeaponMeshPath;
+	TSoftClassPtr<AOtakuWeapon> OtakuWeaponActorClass;
 
 	UPROPERTY()
-	class USkeletalMeshComponent* WeaponMeshComp;
+	TObjectPtr<AOtakuWeapon> OtakuWeapon;
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -65,6 +66,11 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float WalkSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
+	float HitStopTime;
+
+	float HitStopTimeSpan;
 
 public:
 	AOtakuCharacter();

@@ -13,6 +13,7 @@
 #include "OtakuAnimInstance.h"
 #include "Animation/AnimMontage.h"
 #include "ComboActionData.h"
+#include "OtakuWeapon.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -57,14 +58,12 @@ AOtakuCharacter::AOtakuCharacter()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
-	WeaponMeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMeshComp"));
-	WeaponMeshComp->SetupAttachment(GetMesh());
-
 	bFocusMode = false;
 	WalkSpeed = 230.0f;
 	CurrentCombo = 0;
 	HasNextComboCommand = false;
 
+	HitStopTimeSpan = 0.0f;
 }
 
 void AOtakuCharacter::BeginPlay()
@@ -72,18 +71,25 @@ void AOtakuCharacter::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 
-	USkeletalMesh* WeaponMesh = WeaponMeshPath.LoadSynchronous();
-	if (IsValid(WeaponMesh))
+	if (OtakuWeaponActorClass.IsValid())
 	{
-		WeaponMeshComp->SetSkeletalMesh(WeaponMesh);
-		WeaponMeshComp->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("Weapon"));
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		OtakuWeapon = GetWorld()->SpawnActor<AOtakuWeapon>(OtakuWeaponActorClass.LoadSynchronous(), SpawnParams);
+		OtakuWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("Weapon"));
 	}
-
 }
 
 void AOtakuCharacter::AttackHitCheck()
 {
-	UE_LOG(LogTemp, Error, TEXT("AttackHitCheck"));
+	TSet<AActor*> OutOverlapActors;
+	if (IsValid(OtakuWeapon) && OtakuWeapon->CheckWeaponOverlapped(OutOverlapActors))
+	{
+		UE_LOG(LogTemp, Error, TEXT("AttackHitCheck"));
+
+		GetMesh()->bPauseAnims = true;
+		HitStopTimeSpan = HitStopTime;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -143,6 +149,19 @@ void AOtakuCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 void AOtakuCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	// 고도화
+	// 콤보가 끝나면 바로 풀어주기
+	// 콤보 체크랑 관련이 없는지 확인하기
+	// 딜레이 사이 얼마나 쉬게할지 체크도
+	if (HitStopTimeSpan <= 0.0f)
+	{
+		GetMesh()->bPauseAnims = false;
+	}
+	else
+	{
+		HitStopTimeSpan -= DeltaSeconds;
+	}
 	
 	if (IsValid(GetCharacterMovement()))
 	{
