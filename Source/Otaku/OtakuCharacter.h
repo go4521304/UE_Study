@@ -17,6 +17,7 @@ class UOtakuAnimInstance;
 class UAnimMontage;
 class UComboActionData;
 class AOtakuWeapon;
+class UCameraShakeBase;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -127,5 +128,8 @@ private:
 	int32 CurrentCombo;
 	FTimerHandle ComboTimerHandle;
 	bool HasNextComboCommand;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Attack, meta = (AllowPrivateAccess = "true"))
+	TSoftClassPtr<UCameraShakeBase> CameraShakeAsset;
 };
 

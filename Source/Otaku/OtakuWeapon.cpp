@@ -22,5 +22,6 @@ bool AOtakuWeapon::CheckWeaponOverlapped(TSet<AActor*>& OutOverlapActors, TSubcl
 {
 	CapsuleComponent->GetOverlappingActors(OutOverlapActors, InActorClass);
 
+	OutOverlapActors.Remove(GetOwner());
 	return OutOverlapActors.IsEmpty() == false;
 }

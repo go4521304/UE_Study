@@ -14,6 +14,8 @@
 #include "Animation/AnimMontage.h"
 #include "ComboActionData.h"
 #include "OtakuWeapon.h"
+#include "Camera/PlayerCameraManager.h"
+#include "Camera/CameraModifier_CameraShake.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -78,6 +80,8 @@ void AOtakuCharacter::BeginPlay()
 		OtakuWeapon = GetWorld()->SpawnActor<AOtakuWeapon>(OtakuWeaponActorClass.LoadSynchronous(), SpawnParams);
 		OtakuWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("Weapon"));
 	}
+
+	CameraShakeAsset.LoadSynchronous();
 }
 
 void AOtakuCharacter::AttackHitCheck()
@@ -89,6 +93,13 @@ void AOtakuCharacter::AttackHitCheck()
 
 		GetMesh()->bPauseAnims = true;
 		HitStopTimeSpan = HitStopTime;
+
+		APlayerController* PlayerController = GetController<APlayerController>();
+		if (IsValid(PlayerController))
+		{
+			FAddCameraShakeParams CamParms;
+			PlayerController->PlayerCameraManager->StartCameraShake(CameraShakeAsset.Get(), CamParms);
+		}
 	}
 }
 
