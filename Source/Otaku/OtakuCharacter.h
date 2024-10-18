@@ -14,10 +14,8 @@ class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
 class UOtakuAnimInstance;
-class UAnimMontage;
-class UComboActionData;
 class AOtakuWeapon;
-class UCameraShakeBase;
+class UOtakuPrimaryDataAsset;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -54,10 +52,6 @@ class AOtakuCharacter : public ACharacter, public IAnimAttackInterface
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* WalkAction;
 
-	/** Weapon Actor */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
-	TSoftClassPtr<AOtakuWeapon> OtakuWeaponActorClass;
-
 	UPROPERTY()
 	TObjectPtr<AOtakuWeapon> OtakuWeapon;
 
@@ -67,11 +61,6 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float WalkSpeed;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
-	float HitStopTime;
-
-	float HitStopTimeSpan;
 
 public:
 	AOtakuCharacter();
@@ -105,7 +94,6 @@ protected:
 	// IAnimAttackInterface interface
 	virtual void AttackHitCheck() override;
 
-
 public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -113,23 +101,17 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 private:
-	void ComboActionBegin();
-	void ComboActionEnd(UAnimMontage* TargetMontage, bool IsProperlyEnded);
-	void SetComboCheckTimer();
-	void ComboCheck();
+	void LoadedPrimaryAsset();
 
 private:
-	UPROPERTY(EditAnywhere, Category=Animation)
-	TObjectPtr<UAnimMontage> ComboActionMontage;
+	// PrimaryAsset
+	UPROPERTY()
+	TObjectPtr<UOtakuPrimaryDataAsset> OtakuDataAsset;
 
-	UPROPERTY(EditAnywhere, Category=Attack, Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UComboActionData> ComboActionData;
+	UPROPERTY(EditDefaultsOnly, Category=Asset)
+	FName PrimaryAssetName;
 
-	int32 CurrentCombo;
-	FTimerHandle ComboTimerHandle;
-	bool HasNextComboCommand;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Attack, meta = (AllowPrivateAccess = "true"))
-	TSoftClassPtr<UCameraShakeBase> CameraShakeAsset;
+	UPROPERTY()
+	TObjectPtr<UOtakuAnimInstance> OtakuAnimInst;
 };
 

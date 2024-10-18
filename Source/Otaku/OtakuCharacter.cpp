@@ -12,10 +12,11 @@
 #include "InputActionValue.h"
 #include "OtakuAnimInstance.h"
 #include "Animation/AnimMontage.h"
-#include "ComboActionData.h"
 #include "OtakuWeapon.h"
 #include "Camera/PlayerCameraManager.h"
 #include "Camera/CameraModifier_CameraShake.h"
+#include "Engine/AssetManager.h"
+#include "OtakuPrimaryDataAsset.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -62,10 +63,6 @@ AOtakuCharacter::AOtakuCharacter()
 
 	bFocusMode = false;
 	WalkSpeed = 230.0f;
-	CurrentCombo = 0;
-	HasNextComboCommand = false;
-
-	HitStopTimeSpan = 0.0f;
 }
 
 void AOtakuCharacter::BeginPlay()
@@ -73,15 +70,20 @@ void AOtakuCharacter::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 
-	if (OtakuWeaponActorClass.IsValid())
-	{
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.Owner = this;
-		OtakuWeapon = GetWorld()->SpawnActor<AOtakuWeapon>(OtakuWeaponActorClass.LoadSynchronous(), SpawnParams);
-		OtakuWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("Weapon"));
-	}
+	FStreamableDelegate OnAssetLoadedDelegate = FStreamableDelegate::CreateUObject(this, &ThisClass::LoadedPrimaryAsset);
 
-	CameraShakeAsset.LoadSynchronous();
+	FPrimaryAssetId PrimaryAssetId = FPrimaryAssetId(TEXT("OtakuPrimaryDataAsset"), PrimaryAssetName);
+	TArray<FName> BundleNameList;
+	BundleNameList.Add(TEXT("Visible"));
+
+	UAssetManager& AssetManager = UAssetManager::Get();
+	AssetManager.LoadPrimaryAsset(PrimaryAssetId, BundleNameList, OnAssetLoadedDelegate);
+
+	OtakuAnimInst = Cast<UOtakuAnimInstance>(GetMesh()->GetAnimInstance());
+	if (IsValid(OtakuAnimInst) == false)
+	{
+		ensure(false);
+	}
 }
 
 void AOtakuCharacter::AttackHitCheck()
@@ -91,14 +93,16 @@ void AOtakuCharacter::AttackHitCheck()
 	{
 		UE_LOG(LogTemp, Error, TEXT("AttackHitCheck"));
 
-		GetMesh()->bPauseAnims = true;
-		HitStopTimeSpan = HitStopTime;
+		OtakuAnimInst->HitLag();
+
+		//GetMesh()->bPauseAnims = true;
+		//HitStopTimeSpan = HitStopTime;
 
 		APlayerController* PlayerController = GetController<APlayerController>();
 		if (IsValid(PlayerController))
 		{
 			FAddCameraShakeParams CamParms;
-			PlayerController->PlayerCameraManager->StartCameraShake(CameraShakeAsset.Get(), CamParms);
+			PlayerController->PlayerCameraManager->StartCameraShake(OtakuDataAsset->CameraShakeAsset.Get(), CamParms);
 		}
 	}
 }
@@ -160,19 +164,6 @@ void AOtakuCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 void AOtakuCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-
-	// 고도화
-	// 콤보가 끝나면 바로 풀어주기
-	// 콤보 체크랑 관련이 없는지 확인하기
-	// 딜레이 사이 얼마나 쉬게할지 체크도
-	if (HitStopTimeSpan <= 0.0f)
-	{
-		GetMesh()->bPauseAnims = false;
-	}
-	else
-	{
-		HitStopTimeSpan -= DeltaSeconds;
-	}
 	
 	if (IsValid(GetCharacterMovement()))
 	{
@@ -282,89 +273,24 @@ void AOtakuCharacter::AttackAction(const FInputActionValue& Value)
 	{
 		return;
 	}
-	
-	if (CurrentCombo == 0)
-	{
-		ComboActionBegin();
-		UE_LOG(LogTemp, Error, TEXT("ActionBegin"));
-		return;
-	}
 
-	if (ComboTimerHandle.IsValid() == false)
-	{
-		HasNextComboCommand = false;
-	}
-	else
-	{
-		HasNextComboCommand = true;
-	}
+	OtakuAnimInst->ComboAttack();
 }
 
-void AOtakuCharacter::ComboActionBegin()
+void AOtakuCharacter::LoadedPrimaryAsset()
 {
-	CurrentCombo = 1;
-
-	const float AttackSpeedRate = 1.0f;
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	AnimInstance->Montage_Play(ComboActionMontage, AttackSpeedRate);
-
-	FOnMontageEnded EndDelegate;
-	EndDelegate.BindUObject(this, &AOtakuCharacter::ComboActionEnd);
-	AnimInstance->Montage_SetEndDelegate(EndDelegate, ComboActionMontage);
-
-	ComboTimerHandle.Invalidate();
-	SetComboCheckTimer();
-}
-
-void AOtakuCharacter::ComboActionEnd(UAnimMontage* TargetMontage, bool IsProperlyEnded)
-{
-	ensure(CurrentCombo != 0);
-
-	CurrentCombo = 0;
-	UE_LOG(LogTemp, Error, TEXT("ActionEnd"));
-
-}
-
-void AOtakuCharacter::SetComboCheckTimer()
-{
-	int32 ComboIndex = CurrentCombo - 1;
-	
-	if (IsValid(ComboActionData) == false || ComboActionData->EffectiveFrameCount.IsValidIndex(ComboIndex) == false)
+	UAssetManager& Manager = UAssetManager::Get();
+	UOtakuPrimaryDataAsset* PrimaryAssetData = Manager.GetPrimaryAssetObject<UOtakuPrimaryDataAsset>(FPrimaryAssetId(TEXT("OtakuPrimaryDataAsset"), PrimaryAssetName));
+	if (IsValid(PrimaryAssetData))
 	{
-		return;
-	}
+		OtakuDataAsset = PrimaryAssetData;
 
-	const float AttackSpeedRate = ComboActionMontage->RateScale;
-	
-	float ComboEffectiveTime = (ComboActionData->EffectiveFrameCount[ComboIndex] / ComboActionData->FrameRate) / AttackSpeedRate;
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		OtakuWeapon = GetWorld()->SpawnActor<AOtakuWeapon>(OtakuDataAsset->OtakuWeapon.Get(), SpawnParams);
+		ensure(IsValid(OtakuWeapon));
+		OtakuWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("Weapon"));
 
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	ComboEffectiveTime -= AnimInstance->Montage_GetPosition(ComboActionMontage);
-
-	if (ComboEffectiveTime <= 0.0f)
-	{
-		return;
-	}
-
-	GetWorld()->GetTimerManager().SetTimer(ComboTimerHandle, this, &AOtakuCharacter::ComboCheck, ComboEffectiveTime, false);
-}
-
-void AOtakuCharacter::ComboCheck()
-{
-	ComboTimerHandle.Invalidate();
-	if (HasNextComboCommand)
-	{
-		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-
-		CurrentCombo = FMath::Clamp(CurrentCombo + 1, 1, ComboActionData->MaxComboCount);
-		FName CurrentSection = AnimInstance->Montage_GetCurrentSection(ComboActionMontage);
-		FName NextSection = *FString::Printf(TEXT("%s%d"), *ComboActionData->MontageSectionNamePrefix, CurrentCombo);
-		AnimInstance->Montage_SetNextSection(CurrentSection, NextSection, ComboActionMontage);
-		SetComboCheckTimer();
-
-		AnimInstance;
-		HasNextComboCommand = false;
-
-		UE_LOG(LogTemp, Error, TEXT("Combo %f"), AnimInstance->Montage_GetPosition(ComboActionMontage));
+		OtakuAnimInst->InitAnimInstance(PrimaryAssetData);
 	}
 }

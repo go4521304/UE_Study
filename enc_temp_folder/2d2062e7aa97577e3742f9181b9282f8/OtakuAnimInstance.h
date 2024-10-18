@@ -43,6 +43,5 @@ private:
 	bool bComboAttack;
 	float ComboCheckTime;
 
-	float HitLagTimeSpan;
-	float HitLagCoolSpan;
+	float HitStopTimeSpan;
 };

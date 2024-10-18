@@ -23,8 +23,7 @@ void UOtakuAnimInstance::InitAnimInstance(UOtakuPrimaryDataAsset* InPrimaryDataA
 	bComboAttack = false;
 	ComboCheckTime = 0.0f;
 
-	HitLagTimeSpan = 0.0f;
-	HitLagCoolSpan = 0.0f;
+	HitStopTimeSpan = 0.0f;
 }
 
 void UOtakuAnimInstance::ComboAttack()
@@ -44,11 +43,9 @@ void UOtakuAnimInstance::ComboAttack()
 
 void UOtakuAnimInstance::HitLag()
 {
-	if (HitLagCoolSpan <= 0.0f)
-	{
-		HitLagTimeSpan = DataAsset->HitLagTime;
-		Montage_Pause(DataAsset->ComboActionMontage.Get());
-	}
+	HitStopTimeSpan = 0.1f;
+
+	Montage_Pause(DataAsset->ComboActionMontage.Get());
 }
 
 void UOtakuAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -61,20 +58,14 @@ void UOtakuAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		{
 			CheckComboAction();
 		}
-		
-		if (HitLagTimeSpan > 0.0f)
-		{
-			HitLagTimeSpan -= DeltaSeconds;
-			if (HitLagTimeSpan <= 0.0f)
-			{
-				HitLagCoolSpan = DataAsset->HitLagCoolTime;
-				Montage_Resume(DataAsset->ComboActionMontage.Get());
-			}
-		}
 
-		else if (HitLagCoolSpan > 0.0f)
+		if (HitStopTimeSpan <= 0.0f)
 		{
-			HitLagCoolSpan -= DeltaSeconds;
+			Montage_Resume(DataAsset->ComboActionMontage.Get());
+		}
+		else
+		{
+			HitStopTimeSpan -= DeltaSeconds;
 		}
 	}
 }
@@ -114,10 +105,6 @@ void UOtakuAnimInstance::SetComboActionTime()
 {
 	const float AttackSpeedRate = DataAsset->ComboActionMontage->RateScale;
 	ComboCheckTime = (DataAsset->ComboActionData.EffectiveFrameCount[CurrentCombo - 1] / DataAsset->ComboActionData.FrameRate) / AttackSpeedRate;
-
-	// 겸사겸사 역경직도 초기화해주자!
-	HitLagTimeSpan = 0.0f;
-	HitLagCoolSpan = 0.0f;
 }
 
 void UOtakuAnimInstance::CheckComboAction()
